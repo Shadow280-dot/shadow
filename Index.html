@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>!!</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #000;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Courier New', monospace;
+            overflow: hidden;
+            position: relative;
+            padding: 20px;
+        }
+
+        /* Background bintang-bintang */
+        .space {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .star {
+            position: absolute;
+            background-color: #fff;
+            border-radius: 50%;
+            animation: twinkle linear infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 1; }
+        }
+
+        /* Container untuk teks - tanpa background */
+        .container {
+            max-width: 800px;
+            text-align: center;
+        }
+
+        /* Judul dengan efek neon */
+        .neon-title {
+            color: #fff;
+            font-size: 2.5rem;
+            margin-bottom: 100px;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            text-shadow: 
+                0 0 5px #fff,
+                0 0 10px #fff,
+                0 0 15px #ff00ff,
+                0 0 20px #ff00ff,
+                0 0 25px #ff00ff;
+            animation: pulsate 1.5s infinite alternate;
+        }
+
+        @keyframes pulsate {
+            0%, 100% {
+                text-shadow: 
+                    0 0 5px #fff,
+                    0 0 10px #fff,
+                    0 0 15px #ff00ff,
+                    0 0 20px #ff00ff,
+                    0 0 25px #ff00ff;
+            }
+            50% {
+                text-shadow: 
+                    0 0 10px #fff,
+                    0 0 20px #fff,
+                    0 0 30px #ff00ff,
+                    0 0 40px #ff00ff,
+                    0 0 50px #ff00ff;
+            }
+        }
+
+        /* Isi teks dengan efek neon */
+        .neon-content {
+            color: #fff;
+            font-size: 1.5rem;
+            line-height: 1.6;
+            text-shadow: 
+                0 0 5px #fff,
+                0 0 10px #fff,
+                0 0 15px #00ffff,
+                0 0 20px #00ffff;
+            min-height: 200px;
+            text-align: left;
+            max-width: 600px;
+            margin-top: 10px;
+        }
+
+        /* Kursor berkedip */
+        .cursor {
+            display: inline-block;
+            width: 3px;
+            height: 1.2em;
+            background-color: #fff;
+            margin-left: 4px;
+            animation: blink 1s infinite;
+            vertical-align: middle;
+            box-shadow: 0 0 5px #fff, 0 0 10px #00ffff;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* Footer */
+        .footer {
+            position: fixed;
+            bottom: 20px;
+            width: 100%;
+            text-align: center;
+            color: #666;
+            font-size: 0.9rem;
+            text-shadow: 0 0 5px #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="space" id="space"></div>
+    
+    <div class="container">
+        <div class="neon-title" id="titleText"></div>
+        <div class="neon-content" id="contentText"><span class="cursor" id="cursor"></span></div>
+    </div>
+
+    <div class="footer">👉😜</div>
+
+    <script>
+        // Teks perkenalan diri
+        const titleText = "Halo,Selamat Datang Di Web Saya";
+        const contentText = "perkenalkan nama saya M.valent,saya lahir di tangerang,saya sekarang ber umur 16 tahun,saya ngoding hanya untuk menghilangkan kebosanan";
+        
+        let titleIndex = 0;
+        let contentIndex = 0;
+        let isTypingTitle = true;
+        // Kecepatan dikurangi (dipercepat)
+        let typingDelay = 60; // sebelumnya 100
+        let pauseDelay = 1000; // sebelumnya 1500
+
+        // Fungsi untuk membuat bintang-bintang
+        function createStars() {
+            const space = document.getElementById('space');
+            const starsCount = 400;
+            
+            for (let i = 0; i < starsCount; i++) {
+                const star = document.createElement('div');
+                star.classList.add('star');
+                
+                // Posisi acak
+                const posX = Math.random() * 100;
+                const posY = Math.random() * 100;
+                
+                // Ukuran acak
+                const size = Math.random() * 3;
+                
+                // Durasi animasi acak
+                const duration = Math.random() * 5 + 3;
+                
+                // Beberapa bintang diberi warna kebiruan/keunguan
+                const colorValue = Math.random();
+                if (colorValue > 0.7) {
+                    star.style.backgroundColor = `rgb(200, 200, 255)`;
+                } else if (colorValue > 0.5) {
+                    star.style.backgroundColor = `rgb(255, 200, 255)`;
+                }
+                
+                star.style.left = `${posX}%`;
+                star.style.top = `${posY}%`;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                star.style.animationDuration = `${duration}s`;
+                star.style.animationDelay = `${Math.random() * duration}s`;
+                
+                space.appendChild(star);
+            }
+        }
+
+        // Fungsi untuk efek mengetik
+        function typeEffect() {
+            if (isTypingTitle) {
+                // Mengetik judul
+                const titleElement = document.getElementById('titleText');
+                titleElement.textContent = titleText.substring(0, titleIndex);
+                
+                titleIndex++;
+                
+                if (titleIndex <= titleText.length) {
+                    setTimeout(typeEffect, typingDelay);
+                } else {
+                    isTypingTitle = false;
+                    setTimeout(typeEffect, pauseDelay);
+                }
+            } else {
+                // Mengetik konten
+                const contentElement = document.getElementById('contentText');
+                const cursorElement = document.getElementById('cursor');
+                
+                contentElement.textContent = contentText.substring(0, contentIndex);
+                contentElement.appendChild(cursorElement);
+                
+                contentIndex++;
+                
+                if (contentIndex <= contentText.length) {
+                    setTimeout(typeEffect, typingDelay);
+                }
+                // Kursor tetap berkedip setelah selesai mengetik
+            }
+        }
+
+        // Jalankan saat halaman dimuat
+        window.onload = function() {
+            createStars();
+            setTimeout(typeEffect, 800); // Waktu mulai juga dipercepat
+        };
+    </script>
+</body>
+</html>
